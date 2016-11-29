@@ -151,3 +151,20 @@ switch (`cursor^) {
     case : break;
     default:
 }
+
+XPT gs " var getVar () setVar ()
+private `type^ `varName^;`cursor^
+
+`get...^
+XSETm get...|post
+public `R("type")^ get`S(R("varName"),'.','\u&',"")^() {
+    return `R("varName")^;
+}
+
+XSETm END
+`set...^
+XSETm set...|post
+public void set`S(R("varName"),'.','\u&',"")^( `R('type')^ val ) {
+    this.`R("varName")^ = val;
+}
+XSETm END

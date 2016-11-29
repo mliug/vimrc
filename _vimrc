@@ -134,7 +134,7 @@ function AckWithOptions(...)
     else | exec 'Ack! -U' . ignores . expand('<cword>'). ' ' . g:ack_root | endif
 endfunction
 function AckSetSearchRoot()
-    let newackroot = input("Enter a directory to set the root to: ", "d:\\hello", "dir")
+    let newackroot = input("Enter a directory to set the root to: ", "d:\\nfmappsz", "dir")
     if empty(newackroot) | return | endif
     let g:ack_root = newackroot
 endfunction
@@ -172,7 +172,7 @@ set expandtab
 set shiftwidth=4
 set autoindent
 set hidden        " 避免当前编辑文档未保存时，在新窗口打开文档
-set ignorecase
+"set ignorecase
 set cursorline 
 set textwidth=0 " 超过后自动拆行
 set colorcolumn=81
@@ -190,6 +190,7 @@ set cst  " tag有多个匹配项时可以提供选择的机会
 set dictionary+=~/vim_autocomplete_dic.txt
 set complete+=k
 set fileformat=unix
+set scrolloff=0 " 设置光标离屏幕顶底的距离
 
 " ------------------------------ 设置快捷键 --------------------------------
 nmap Q :call DeleteCurBuf()<cr>
@@ -197,17 +198,13 @@ nmap <leader>q <c-w>c
 nmap <leader>b :ls<CR>
 nmap <leader>w :update<CR>
 nmap <leader>e :browse confirm e<CR>
-if has("win32")
-    nmap <leader>s :e c:/users/your_name/_vimrc<CR>
-else
-    nmap <leader>s :e ~/.vimrc<CR>
-endif
+if has("win32") | nmap <leader>s :e c:/users/10171103/_vimrc<CR>
+else | nmap <leader>s :e ~/.vimrc<CR> | endif
 
 nmap ;s <Plug>(easymotion-F)
 nmap ;f <Plug>(easymotion-f)
 nmap ;j <Plug>(easymotion-j)
 nmap ;k <Plug>(easymotion-k)
-
 
 inoremap <c-l> <c-o><del>
 nnoremap <s-Tab> :bn<CR>
@@ -221,7 +218,7 @@ vnoremap <c-s-tab> <esc>:bp<cr>
 inoremap <c-s-tab> <esc>:bp<cr>
 inoremap <c-f> <pagedown>
 inoremap <c-b> <pageup>
-nmap <c-x><c-f> :cd d:\hello<cr>
+nmap <c-x><c-f> :cd d:\nfmappsz<cr>
 nmap <C-x><c-d> :pwd<CR>
 nmap <c-x><c-s> :cd ..<CR>:pwd<CR>
 nmap <c-x><c-x> :CtrlPBuffer<cr>
@@ -236,6 +233,8 @@ nnoremap <c-s-left> zH
 nmap <c-x><c-w> :call ToggleWrap()<cr>
 imap <c-x><c-w> <c-o>:call ToggleWrap()<cr>
 vmap <c-x><c-w> <c-c>:call ToggleWrap()<cr>
+vnoremap <c-h> <esc>:promptrepl<cr>
+nnoremap <c-h> <esc>:promptrepl<cr>
 
 nmap <m-d> :echo "ack root: ". g:ack_root<cr>
 nmap <m-s> :call ShowCurrentTag()<cr>
@@ -266,9 +265,9 @@ imap <F6> <ESC>:CtrlPFunky<cr>
 nnoremap <F7> <ESC>:CtrlP<CR>
 vnoremap <F7> <ESC>:CtrlP<CR>
 inoremap <F7> <ESC>:CtrlP<CR>
-nmap <F8> <ESC>:CtrlPBuffer<CR>
-vmap <F8> <ESC>:CtrlPBuffer<CR>
-imap <F8> <ESC>:CtrlPBuffer<CR>
+nmap <F8> <ESC>:CtrlPMRU<CR>
+vmap <F8> <ESC>:CtrlPMRU<CR>
+imap <F8> <ESC>:CtrlPMRU<CR>
 nmap <F9> <ESC>:call ToggleQuickfix()<CR>
 vmap <F9> <ESC>:call ToggleQuickfix()<CR>
 imap <F9> <ESC>:call ToggleQuickfix()<CR>
@@ -291,38 +290,16 @@ else
     set rtp+=~/.vim/bundle/Vundle.vim
     call vundle#begin('~/.vim/bundle')
 endif
-"Bundle 'gmarik/vundle'
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'altercation/vim-colors-solarized'
-"Plugin 'molokai'
-"Plugin 'endel/vim-github-colorscheme'
-"Plugin 'ciaranm/inkpot'
-"Plugin 'Lokaltog/vim-powerline'
-"Plugin 'vim-airline/vim-airline'
-"Plugin 'vim-airline/vim-airline-themes'
 Plugin 'majutsushi/tagbar'
 Plugin 'scrooloose/nerdtree'
-"Plugin 'ervandew/supertab'
-"Plugin 'yegappan/grep'
-"Plugin 'dkprice/vim-easygrep'
 Plugin 'mileszs/ack.vim'
 Plugin 'easymotion/vim-easymotion'
-"Plugin 'kien/ctrlp.vim'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'tacahiroy/ctrlp-funky'
 Plugin 'drmingdrmer/xptemplate'
 Plugin 'ap/vim-buftabline'
-"Plugin 'vim-scripts/bufferlist.vim'
-"Plugin 'mihaifm/bufstop'
-"Plugin 'itchyny/thumbnail.vim'
-"Plugin 'tomtom/tselectbuffer_vim'
-"Plugin 'vim-scripts/PopupBuffer.vim'
-"Plugin 'vim-scripts/jsbeautify'
-"Plugin 'othree/xml.vim'
-"Plugin 'Valloric/YouCompleteMe'
-"Plugin 'vim-scripts/javacomplete'
-"Plugin 'artur-shaik/vim-javacomplete2'
-"Plugin 'vim-scripts/OmniCppComplete'
 call vundle#end()            " required
 filetype plugin indent on    " required
 " To ignore plugin indent changes, instead use:
@@ -335,22 +312,6 @@ filetype plugin indent on    " required
 " :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
 
 " =================================== delimiters ===============================
-" EasyGrep
-"let g:EasyGrepMode=2 " use TrackExt
-"let g:EasyGrepReplaceWindowMode=2 "autowriteall; create no new windows (when replace)
-"let g:EasyGrepJumpToMatch=0
-"let g:EasyGrepAllOptionsInExplorer=1
-"set grepprg=grep\ -n\ -a
-"let g:EasyGrepCommand=1
-"let g:EasyGrepRecursive=1
-"let g:EasyGrepSearchCurrentBufferDir=0
-"let g:EasyGrepFilesToExclude='.svn,.git,.root,bin,target,*.swp,*.gif,*.png,*.jpg,*.svg,*.zip,*.gz,*.class,*.jar,tags,tags.files'
-
-" 设置supertab
-"let g:SuperTabDefaultCompletionType="context"
-"let g:SuperTabMappingForward = '<s-tab>'
-"let g:SuperTabMappingBackward = '<tab>'
-
 " 设置Tagbar
 let g:tagbar_left=1
 let g:tagbar_width=30
@@ -381,9 +342,8 @@ else
 endif
 let g:ctrlp_root_markers = ['pom.xml', '.root']
 set wildignore=*\\tmp\\*,*.swp,*.zip,*.exe
-"let g:ctrlp_user_command = 'dir %s /-n /b /s /a-d'
 let g:ctrlp_custom_ignore = {
-    \ 'dir': '\v[\/](build|bin|target|00\.features|build-tools|code_assembly|commons)$',
+    \ 'dir': '\v[\/](build|bin|target)$',
     \ 'file': '\v\.(jar|yang|properties|class|xml|MF|sh|bat|xlsx|files|proto|conf|md|txt|xsd|png|gif|svg|json|gz|less|css|scss)$',
     \ 'link': 'SOME_BAD_SYMBOLIC_LINKS',}
 " ctrlp_funky
