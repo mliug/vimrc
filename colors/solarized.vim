@@ -576,7 +576,8 @@ exe "hi! Type"           .s:fmt_bold   .s:fg_yellow .s:bg_none
 "        Structure       struct, union, enum, etc.
 "        Typedef         A typedef
 
-exe "hi! Special"        .s:fmt_none   .s:fg_red    .s:bg_none
+"exe "hi! Special"        .s:fmt_none   .s:fg_red    .s:bg_none
+exe "hi! Special"        .s:fmt_none   ." ".s:vmode."fg=#ffffff " .s:bg_none
 "       *Special         any special symbol
 "        SpecialChar     special character in a constant
 "        Tag             you can use CTRL-] on this
@@ -1124,9 +1125,14 @@ hi User2 ctermbg=red guibg=red " 文件被修改
 hi User3 ctermfg=black ctermbg=yellow guifg=black guibg=darkyellow  " 插入模式
 hi User4 ctermfg=black ctermbg=green  guifg=black guibg=darkgreen   " 非插入模式
 hi User5 ctermfg=black ctermbg=white  guifg=black guibg=lightyellow " 文件名
-exe 'hi! User6 ctermfg=darkred ctermbg=darkgrey guifg=DarkRed guibg='.s:base1
-exe 'hi! User7 ctermfg=magenta ctermbg=darkgrey guifg=darkmagenta guibg='.s:base1
-set fillchars=vert:│
+if has("gui_running")
+    exe 'hi! User6 guifg=DarkRed guibg='.s:base1
+    exe 'hi! User7 guifg=darkmagenta guibg='.s:base1
+else
+    hi! User6 ctermfg=darkred ctermbg=darkgrey
+    hi! User7 ctermfg=magenta ctermbg=darkgrey
+endif
+set fillchars=vert:\│
 
 let java_highlight_functions=1
 hi javaFuncDef guifg=#00ff80   ctermfg=yellow

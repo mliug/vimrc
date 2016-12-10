@@ -112,7 +112,7 @@ XPT fun
 }
 
 XPT pt
-System.out.println("`cursor^");
+System.out.println(`cursor^);
 
 XPT f
 `cursor^() {
@@ -148,8 +148,8 @@ while (`cursor^) {
 
 XPT switch
 switch (`cursor^) {
-    case : break;
-    default:
+case : break;
+default:
 }
 
 XPT gs " var getVar () setVar ()

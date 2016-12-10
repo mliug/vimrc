@@ -1,5 +1,5 @@
 " ================================= FUNCTIONS =================================
-function MyDiff()
+function MyDiff()  " For Windows
   let opt = '-a --binary '
   if &diffopt =~ 'icase' | let opt = opt . '-i ' | endif
   if &diffopt =~ 'iwhite' | let opt = opt . '-b ' | endif
@@ -22,52 +22,45 @@ function MyDiff()
   endif
   silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' > ' . arg3 . eq
 endfunction
-
+function Maximize_Window()  " Used in GNOME
+   silent !wmctrl -r :ACTIVE: -b add,maximized_vert,maximized_horz
+endfunction
 function SetStatusLine()
     let fix_part='%2*%m%5*\ %t\ %*%<%h%w%q%r%=\ %7*<%n>\ %l,\ %c\ :\ %p%%%*\|%6*0x%02B%*\|%6*%{&fileformat}%*\|%6*%{&fileencoding}%*'
-    let insert_mode='%3*INSERT'
-    let other_mode='%4*------'
+    let insert_mode='%3*INSERT' | let other_mode='%4*------'
     exe 'set statusline=' . other_mode . fix_part
     exe 'au InsertEnter * set statusline=' . insert_mode . fix_part
     exe 'au InsertLeave * set statusline=' . other_mode . fix_part
     set laststatus=2
 endfunction
-
-"±êÇ©Ò³À¸ÖĞÈ¥³ıµ±Ç°Ëù±à¼­ÎÄ¼şµÄÂ·¾¶ĞÅÏ¢£¬Ö»±£ÁôÎÄ¼şÃû
-function ShortTabLabel ()
+function ShortTabLabel () " Only show filename on tabs
     let bufnrlist = tabpagebuflist (v:lnum)
     let label = bufname (bufnrlist[tabpagewinnr (v:lnum) -1])
     let filename = fnamemodify (label, ':t')
     return filename
 endfunction
-
-" ¹Ø±Õµ±Ç°´ò¿ªµÄÎÄ¼ş,¶ø²»¹Ø±Õ´°¿Ú
-function DeleteCurBuf()
+function DeleteCurBuf() " Delete the buffer and don't close the window
     let l:cBuf = bufnr("%")
-    if 0 == buflisted(l:cBuf) | exec "echo \'This buffer can not delete.\'" | return | endif
+    if 0 == buflisted(l:cBuf) | exec "echo \'This buffer can not be deleted.\'" | return | endif
     if buflisted(bufnr("#")) | exec "b#" | else | exec "bp" | endif
     let l:newBufNum = bufnr("%")
     if l:cBuf == l:newBufNum | exec "echo \'This is the last opened file.\'" | return | endif
     exec "bw " . l:cBuf
 endfunction
-
-" // ×¢ÊÍ¹¦ÄÜ
-function WasCommented(str)
+function WasCommented(str)  " Judge is this line a comment (by //)
     let str_len = strlen(a:str) | let i = 0
     while i < str_len
         if a:str[i] != ' ' && a:str[i] != "\t" | break | endif | let i += 1
     endwhile
     if i < str_len - 1 && a:str[i] == a:str[i+1] && a:str[i] == "/" | return 1 | else | return 0 | endif
 endfunction
-function ToggleCommentLine()
+function ToggleCommentLine()  " Toggle line with //
     let nr = line('.') | let str_line = getline(nr)
     if WasCommented(str_line) | let newstr = substitute(str_line, '//', '', '')
     else | let newstr = substitute(str_line, '^', '//', '') | endif
     :call setline(nr, newstr)
 endfunction
-
-" 1 tagbar´ò¿ªÁË£¬2 nerdtree´ò¿ªÁË£¬3¶¼´ò¿ªÁË£¬0¶¼Ã»´ò¿ª
-function WhichOpened()
+function WhichOpened()  " Judge if Tagbar or NERDTree opened. 0 both are not, 1 only Tagbar, 2 only NERDTree, 3 both were opened.
     let retv = 0
     if bufwinnr('__Tagbar__') != -1 | let retv += 1 | endif
     if bufwinnr('NERD_tree_1') != -1 | let retv += 2 | endif
@@ -82,18 +75,15 @@ func ToggleNERDTree()
     let wo = WhichOpened() | exec "NERDTreeClose"
     if (wo != 2 && wo != 3) | exec "NERDTreeToggle" | exec "normal! \<c-w>h" | endif
 endf
-function ToggleFull()
+function ToggleFull()  " Open or close Tagbar and NERDTree at the same time.
     let wo = WhichOpened() | exec "NERDTreeClose"
     if (wo == 0) | exec "NERDTreeToggle" | exec "normal! \<c-w>h" | exec "TagbarOpen"
     else | exec "TagbarClose" | endif
 endfunction
-function FindFilePath()
+function FindFilePath()  " Let NERDTree unfold to current file.
     exec 'NERDTreeFind' | exec "normal! \<c-w>h"
 endfunction
-
-" ¿ª¹ØQuickFix´°¿Ú
-" This function works only on language is English.
-function IsQuickfixLoaded()
+function IsQuickfixLoaded() " This function works only on language is English.
     redir => bufoutput
     exe "silent! buffers!"
     " This echo clears a bug in printing that shows up when it is not present
@@ -105,19 +95,14 @@ function ToggleQuickfix()
     if IsQuickfixLoaded() | :ccl
     else | :copen | :exec "normal! \<c-w>J" | endif
 endfunction
-
-" ÕÛ²»ÕÛµş 
-let g:isNoWrap = 1
+let g:isNoWrap = 1  " wrap lines or not
 function ToggleWrap()
     if g:isNoWrap == 0 | exe "set nowrap" | let g:isNoWrap = 1
     else | exe "set wrap" | let g:isNoWrap = 0 | endif
 endfunction
-
-" tagbar²å¼şµÄ¹¦ÄÜ
-function ShowCurrentTag()
+function ShowCurrentTag()  " about Tagbar
     let str = tagbar#currenttag('%s', '', 's') | echo str
 endfunction
-
 " about Ack.vim
 function BuildIgnore()
     let dir_list = split(g:ack_ignore_dir, ',')
@@ -134,34 +119,35 @@ function AckWithOptions(...)
     else | exec 'Ack! -U' . ignores . expand('<cword>'). ' ' . g:ack_root | endif
 endfunction
 function AckSetSearchRoot()
-    let newackroot = input("Enter a directory to set the root to: ", "d:\\nfmappsz", "dir")
+    let newackroot = input("Enter a directory to set the root to: ", "d:\\", "dir")
     if empty(newackroot) | return | endif
     let g:ack_root = newackroot
 endfunction
 command! -nargs=? MyAck call AckWithOptions(<f-args>)
 command! -nargs=0 MyAckSetRoot call AckSetSearchRoot()
 
-" ================================= SETTINGS ==================================
+" ============================ BASIC SETTINGS ==================================
 set encoding=utf-8 
-set langmenu=zh_CN.UTF-8 "set menu's language of gvim.
-language messages en_US.UTF-8
+"set langmenu=zh_CN.UTF-8 "set menu's language of gvim.
+if !has("win32") | language en_US | endif
+language messages en_US
 set nocompatible
 if has("win32")
     source $VIMRUNTIME/vimrc_example.vim
     source $VIMRUNTIME/mswin.vim
     behave mswin
     set diffexpr=MyDiff()
-    au GuiEnter * simalt ~x  " ×Ô¶¯×î´ó»¯
+    au GuiEnter * simalt ~x  " Auto maximize the window
 endif
 
-if has("gui_running")   "Èç¹ûÔÚ GUI »·¾³ÏÂÔËĞĞÔòÉèÖÃÏÂÃæÓï¾ä 
-    set guifont=Consolas:h11
-    set guioptions-=T   " ²»ÏÔÊ¾¹¤¾ßÀ¸
-    set guioptions-=L   " ²»ÏÔÊ¾×ó±ß¹ö¶¯Ìõ
-    set guioptions-=r   " ²»ÏÔÊ¾ÓÒ±ß¹ö¶¯Ìõ
-    set guioptions-=m 
+if has("gui_running")
+    if has("win32") | set guifont=Consolas:h11 | else | set guifont=YaHei\ Consolas\ Hybrid\ Regular\ 11 | endif
+    set guioptions-=T   " No tools bar
+    set guioptions-=L   " No left scroll bar
+    set guioptions-=r   " No right scroll bar
+    set guioptions-=m   " No menus
     set guitablabel=%{ShortTabLabel()}
-    set vb t_vb=        " ½ûÓÃÏìÁåÌáĞÑ
+    set vb t_vb=        " No bell, the next is no flash
     au GuiEnter * set t_vb=
 endif
 
@@ -171,34 +157,33 @@ set tabstop=4
 set expandtab
 set shiftwidth=4
 set autoindent
-set hidden        " ±ÜÃâµ±Ç°±à¼­ÎÄµµÎ´±£´æÊ±£¬ÔÚĞÂ´°¿Ú´ò¿ªÎÄµµ
+set hidden        " é¿å…å½“å‰ç¼–è¾‘æ–‡æ¡£æœªä¿å­˜æ—¶ï¼Œåœ¨æ–°çª—å£æ‰“å¼€æ–‡æ¡£
 "set ignorecase
 set cursorline 
-set textwidth=0 " ³¬¹ıºó×Ô¶¯²ğĞĞ
+set textwidth=0 " è¶…è¿‡åè‡ªåŠ¨æ‹†è¡Œ
 set colorcolumn=81
 set mouse=a
-set completeopt=menu     " ²¹È«ÉèÖÃ
+set completeopt=menu     " è¡¥å…¨è®¾ç½®
 call SetStatusLine()
 set nobackup
 set noundofile
 set noswapfile
-set nowrap  " ²»²ğĞĞ
-set nofoldenable " Æô¶¯Ê±¹Ø±ÕÕÛµş
-set cst  " tagÓĞ¶à¸öÆ¥ÅäÏîÊ±¿ÉÒÔÌá¹©Ñ¡ÔñµÄ»ú»á
-" ÉèÖÃ×Ô¶¯²¹È«µÄµ¥´ÊÁĞ±í£¬Èç¹ûÃ»ÓĞset completeÄÇÃ´ĞèÒª°´<c-x><c-k>²Å»á³öÏÖ²¹È«£¬
-" Èç¹ûÉèÖÃÁËset completeÄÇÃ´Ö±½ÓÊ¹ÓÃ<c-n>»ò<c-p>¾Í¿ÉÒÔÁË¡£
+set nowrap  " ä¸æ‹†è¡Œ
+set nofoldenable " å¯åŠ¨æ—¶å…³é—­æŠ˜å 
+set cst  " tagæœ‰å¤šä¸ªåŒ¹é…é¡¹æ—¶å¯ä»¥æä¾›é€‰æ‹©çš„æœºä¼š
+" è®¾ç½®è‡ªåŠ¨è¡¥å…¨çš„å•è¯åˆ—è¡¨ï¼Œå¦‚æœæ²¡æœ‰set completeé‚£ä¹ˆéœ€è¦æŒ‰<c-x><c-k>æ‰ä¼šå‡ºç°è¡¥å…¨ï¼Œ
+" å¦‚æœè®¾ç½®äº†set completeé‚£ä¹ˆç›´æ¥ä½¿ç”¨<c-n>æˆ–<c-p>å°±å¯ä»¥äº†ã€‚
 set dictionary+=~/vim_autocomplete_dic.txt
 set complete+=k
 set fileformat=unix
-set scrolloff=0 " ÉèÖÃ¹â±êÀëÆÁÄ»¶¥µ×µÄ¾àÀë
+set scrolloff=0 " è®¾ç½®å…‰æ ‡ç¦»å±å¹•é¡¶åº•çš„è·ç¦»
 
-" ------------------------------ ÉèÖÃ¿ì½İ¼ü --------------------------------
+" ------------------------------ SET HOT KEYS --------------------------------
 nmap Q :call DeleteCurBuf()<cr>
-nmap <leader>q <c-w>c
 nmap <leader>b :ls<CR>
 nmap <leader>w :update<CR>
 nmap <leader>e :browse confirm e<CR>
-if has("win32") | nmap <leader>s :e c:/users/10171103/_vimrc<CR>
+if has("win32") | nmap <leader>s :e ~/_vimrc<CR>
 else | nmap <leader>s :e ~/.vimrc<CR> | endif
 
 nmap ;s <Plug>(easymotion-F)
@@ -218,7 +203,6 @@ vnoremap <c-s-tab> <esc>:bp<cr>
 inoremap <c-s-tab> <esc>:bp<cr>
 inoremap <c-f> <pagedown>
 inoremap <c-b> <pageup>
-nmap <c-x><c-f> :cd d:\nfmappsz<cr>
 nmap <C-x><c-d> :pwd<CR>
 nmap <c-x><c-s> :cd ..<CR>:pwd<CR>
 nmap <c-x><c-x> :CtrlPBuffer<cr>
@@ -253,15 +237,15 @@ imap <f2> <c-o>:call ToggleNERDTree()<cr>
 vmap <F3>  <C-C><ESC>/<C-R>+<CR><ESC>N
 nmap <F3> /<C-R>=expand("<cword>")<CR><CR>N
 imap <F3> <c-o>/<C-R>=expand("<cword>")<CR><CR><c-o>N
-nmap <F4> <ESC>:Grep 
-vmap <F4> <ESC>:Grep 
-imap <F4> <ESC>:Grep 
+"nmap <F4> <ESC>:Grep 
+"vmap <F4> <ESC>:Grep 
+"imap <F4> <ESC>:Grep 
 nmap <f5> <esc>:call FindFilePath()<cr>
 vmap <f5> <esc>:call FindFilePath()<cr>
 imap <f5> <esc>:call FindFilePath()<cr>
-nmap <F6> <ESC>:CtrlPFunky<cr>
-vmap <F6> <ESC>:CtrlPFunky<cr>
-imap <F6> <ESC>:CtrlPFunky<cr>
+"nmap <F6> <ESC>:CtrlPFunky<cr>
+"vmap <F6> <ESC>:CtrlPFunky<cr>
+"imap <F6> <ESC>:CtrlPFunky<cr>
 nnoremap <F7> <ESC>:CtrlP<CR>
 vnoremap <F7> <ESC>:CtrlP<CR>
 inoremap <F7> <ESC>:CtrlP<CR>
@@ -281,7 +265,22 @@ nnoremap <silent> <F12> <ESC>:<C-R>=line("'<")<CR>,<C-R>=line("'>")<CR>s/\/\//<C
 vnoremap <silent> <F12> <ESC>:<C-R>=line("'<")<CR>,<C-R>=line("'>")<CR>s/\/\//<CR>/^$x<CR>
 inoremap <silent> <F12> <ESC>:<C-R>=line("'<")<CR>,<C-R>=line("'>")<CR>s/\/\//<CR>/^$x<CR>
 
-" -------------------------------- ÉèÖÃ²å¼ş ----------------------------------
+if !has("win32")   " Some hot keys like windows
+    vnoremap <C-C> "+y
+    map <C-V>		"+gP
+    cmap <C-V>		<C-R>+
+    noremap <C-S>		:update<CR>
+    vnoremap <C-S>		<C-C>:update<CR>
+    inoremap <C-S>		<C-O>:update<CR>
+    noremap <C-A> gggH<C-O>G
+    inoremap <C-A> <C-O>gg<C-O>gH<C-O>G
+    cnoremap <C-A> <C-C>gggH<C-O>G
+    onoremap <C-A> <C-C>gggH<C-O>G
+    snoremap <C-A> <C-C>gggH<C-O>G
+    xnoremap <C-A> <C-C>ggVG
+endif
+
+" -------------------------------- SET PLUGIN ----------------------------------
 filetype off            " required
 if has("win32")
     set rtp+=$VIM/vimfiles/bundle/Vundle.vim
@@ -297,7 +296,7 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'mileszs/ack.vim'
 Plugin 'easymotion/vim-easymotion'
 Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'tacahiroy/ctrlp-funky'
+"Plugin 'tacahiroy/ctrlp-funky'
 Plugin 'drmingdrmer/xptemplate'
 Plugin 'ap/vim-buftabline'
 call vundle#end()            " required
@@ -311,13 +310,13 @@ filetype plugin indent on    " required
 " :PluginSearch foo - searches for foo; append `!` to refresh local cache
 " :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
 
-" =================================== delimiters ===============================
-" ÉèÖÃTagbar
+" =================================== plugin settings ==========================
+" Tagbar
 let g:tagbar_left=1
 let g:tagbar_width=30
 let g:tagbar_autoclose=0
 let g:tagbar_compact = 1
-let g:tagbar_iconchars=['>', 'v']
+if has("win32") | let g:tagbar_iconchars=['>', 'v'] | endif
 
 " NERDTree
 let NERDTreeWinPos='right'
@@ -325,7 +324,7 @@ let NERDTreeShowLineNumbers=0
 let NERDTreeWinSize=30
 let NERDTreeMinimalUI=1
 
-" ÉèÖÃ ctrlp
+" ctrlp
 let g:ctrlp_cmd='CtrlPBuffer'
 let g:ctrlp_by_filename = 1
 let g:ctrlp_regexp = 1
@@ -334,12 +333,8 @@ let g:ctrlp_max_height = 30
 let g:ctrlp_max_files = 100000
 let g:ctrlp_use_caching = 1
 let g:ctrlp_clear_cache_on_exit = 0
-let g:ctrlp_bufpath_mod = '' " ÈÃBuffer mode²»ÏÔÊ¾Â·¾¶
-if has("win32")
-    let g:ctrlp_cache_dir = $VIM.'/cache/ctrlp'
-else
-    let g:ctrlp_cache_dir = '~/.ctrlp'
-endif
+let g:ctrlp_bufpath_mod = '' " è®©Buffer modeä¸æ˜¾ç¤ºè·¯å¾„
+let g:ctrlp_cache_dir = '~/.ctrlp'
 let g:ctrlp_root_markers = ['pom.xml', '.root']
 set wildignore=*\\tmp\\*,*.swp,*.zip,*.exe
 let g:ctrlp_custom_ignore = {
@@ -350,8 +345,11 @@ let g:ctrlp_custom_ignore = {
 let g:ctrlp_extensions = ['funky']
 let g:ctrlp_funky_syntax_highlight = 1
 
-colorscheme solarized
-
+" ack
 let g:ackprg = 'ag --vimgrep'
 let g:ack_ignore_dir='target,*.class,*.jar,tags,tags.files'
+
+let g:solarized_termcolors = 256
+colorscheme solarized
+set bg=dark
 
