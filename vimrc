@@ -268,6 +268,7 @@ inoremap <silent> <F12> <ESC>:<C-R>=line("'<")<CR>,<C-R>=line("'>")<CR>s/\/\//<C
 if !has("win32")   " Some hot keys like windows
     vnoremap <C-C> "+y
     map <C-V>		"+gP
+    imap <C-V>      <c-o>"+gP
     cmap <C-V>		<C-R>+
     noremap <C-S>		:update<CR>
     vnoremap <C-S>		<C-C>:update<CR>
