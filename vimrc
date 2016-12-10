@@ -128,8 +128,8 @@ command! -nargs=0 MyAckSetRoot call AckSetSearchRoot()
 
 " ============================ BASIC SETTINGS ==================================
 set encoding=utf-8 
-"set langmenu=zh_CN.UTF-8 "set menu's language of gvim.
-if !has("win32") | language en_US | endif
+set langmenu=en_US   "set menu's language of gvim.
+if !has("win32") | language en_US.utf8| endif
 language messages en_US
 set nocompatible
 if has("win32")

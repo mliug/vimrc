@@ -539,7 +539,7 @@ endif
 
 exe "hi! Normal"         .s:fmt_none   .s:fg_base0  .s:bg_back
 
-exe "hi! Comment"        .s:fmt_none   ." ".s:vmode."fg=#ffffff " .s:bg_none
+exe "hi! Comment"        .s:fmt_none   ." ".s:vmode."fg=white" .s:bg_none
 "       *Comment         any comment
 
 exe "hi! Constant"       .s:fmt_none   .s:fg_cyan   .s:bg_none
@@ -556,6 +556,7 @@ exe "hi! Identifier"     .s:fmt_none   .s:fg_blue   .s:bg_none
 "
 exe "hi! Statement"      .s:fmt_bold   .s:fg_green  .s:bg_none
 "       *Statement       any statement
+if !has("win32") | language en_US.utf8| endif
 "        Conditional     if, then, else, endif, switch, etc.
 "        Repeat          for, do, while, etc.
 "        Label           case, default, etc.
@@ -577,7 +578,8 @@ exe "hi! Type"           .s:fmt_bold   .s:fg_yellow .s:bg_none
 "        Typedef         A typedef
 
 "exe "hi! Special"        .s:fmt_none   .s:fg_red    .s:bg_none
-exe "hi! Special"        .s:fmt_none   ." ".s:vmode."fg=#ffffff " .s:bg_none
+
+exe "hi! Special"        .s:fmt_none   ." ".s:vmode."fg=white" .s:bg_none
 "       *Special         any special symbol
 "        SpecialChar     special character in a constant
 "        Tag             you can use CTRL-] on this
@@ -1130,7 +1132,7 @@ if has("gui_running")
     exe 'hi! User7 guifg=darkmagenta guibg='.s:base1
 else
     hi! User6 ctermfg=darkred ctermbg=darkgrey
-    hi! User7 ctermfg=magenta ctermbg=darkgrey
+    hi! User7 ctermfg=darkred ctermbg=darkgrey
 endif
 set fillchars=vert:\│
 
