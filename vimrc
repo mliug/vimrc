@@ -103,6 +103,11 @@ endfunction
 function ShowCurrentTag()  " about Tagbar
     let str = tagbar#currenttag('%s', '', 's') | echo str
 endfunction
+function MyChangeDir()
+    let newdir = input("cd: ", strpart(execute('pwd'), 1), "dir")
+    exe 'cd ' . newdir
+endfunction
+command! -nargs=0 Mycd call MyChangeDir()
 " about Ack.vim
 function BuildIgnore()
     let dir_list = split(g:ack_ignore_dir, ',')
@@ -204,6 +209,7 @@ vnoremap <c-s-tab> <esc>:bp<cr>
 inoremap <c-s-tab> <esc>:bp<cr>
 inoremap <c-f> <pagedown>
 inoremap <c-b> <pageup>
+nmap <c-x><c-f> :Mycd<cr>
 nmap <C-x><c-d> :pwd<CR>
 nmap <c-x><c-s> :cd ..<CR>:pwd<CR>
 nmap <c-x><c-x> :CtrlPBuffer<cr>
