@@ -119,7 +119,7 @@ function AckWithOptions(...)
     else | exec 'Ack! -U' . ignores . expand('<cword>'). ' ' . g:ack_root | endif
 endfunction
 function AckSetSearchRoot()
-    let newackroot = input("Enter a directory to set the root to: ", "d:\\", "dir")
+    let newackroot = input("Enter a directory to set the root to: ", strpart(execute('pwd'), 1), "dir")
     if empty(newackroot) | return | endif
     let g:ack_root = newackroot
 endfunction
@@ -141,7 +141,7 @@ if has("win32")
 endif
 
 if has("gui_running")
-    if has("win32") | set guifont=Consolas:h11 | else | set guifont=YaHei\ Consolas\ Hybrid\ Regular\ 11 | endif
+    if has("win32") | set guifont=Consolas:h13 | else | set guifont=YaHei\ Consolas\ Hybrid\ Regular\ 11 | endif
     set guioptions-=T   " No tools bar
     set guioptions-=L   " No left scroll bar
     set guioptions-=r   " No right scroll bar
@@ -161,21 +161,22 @@ set hidden        " 避免当前编辑文档未保存时，在新窗口打开文
 "set ignorecase
 set cursorline 
 set textwidth=0 " 超过后自动拆行
-set colorcolumn=81
+set colorcolumn=81,121
 set mouse=a
 set completeopt=menu     " 补全设置
+set ffs=unix,dos
 call SetStatusLine()
 set nobackup
 set noundofile
 set noswapfile
 set nowrap  " 不拆行
+set sidescroll=5
 set nofoldenable " 启动时关闭折叠
 set cst  " tag有多个匹配项时可以提供选择的机会
 " 设置自动补全的单词列表，如果没有set complete那么需要按<c-x><c-k>才会出现补全，
 " 如果设置了set complete那么直接使用<c-n>或<c-p>就可以了。
 set dictionary+=~/vim_autocomplete_dic.txt
 set complete+=k
-set fileformat=unix
 set scrolloff=0 " 设置光标离屏幕顶底的距离
 
 " ------------------------------ SET HOT KEYS --------------------------------
