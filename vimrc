@@ -26,7 +26,7 @@ function Maximize_Window()  " Used in GNOME
    silent !wmctrl -r :ACTIVE: -b add,maximized_vert,maximized_horz
 endfunction
 function SetStatusLine()
-    let fix_part='%2*%m%5*\ %t\ %*%<%h%w%q%r%=\ %7*<%n>\ %l,\ %c\ :\ %p%%%*\|%6*0x%02B%*\|%6*%{&fileformat}%*\|%6*%{&fileencoding}%*'
+    let fix_part='%2*%m%5*\ %t\ %*%<%h%w%q%r%=\ %7*<%n>\ %l,\ %c\ :\ %p%%%*\|%6*0x%02B%*\|%6*%{&fileformat}%*\|%6*%{&fileencoding}%*\ '
     let insert_mode='%3*INSERT' | let other_mode='%4*------'
     exe 'set statusline=' . other_mode . fix_part
     exe 'au InsertEnter * set statusline=' . insert_mode . fix_part
@@ -250,9 +250,9 @@ imap <F3> <c-o>/<C-R>=expand("<cword>")<CR><CR><c-o>N
 nmap <f5> <esc>:call FindFilePath()<cr>
 vmap <f5> <esc>:call FindFilePath()<cr>
 imap <f5> <esc>:call FindFilePath()<cr>
-"nmap <F6> <ESC>:CtrlPFunky<cr>
-"vmap <F6> <ESC>:CtrlPFunky<cr>
-"imap <F6> <ESC>:CtrlPFunky<cr>
+nmap <F6> <ESC>:CtrlPFunky<cr>
+vmap <F6> <ESC>:CtrlPFunky<cr>
+imap <F6> <ESC>:CtrlPFunky<cr>
 nnoremap <F7> <ESC>:CtrlP<CR>
 vnoremap <F7> <ESC>:CtrlP<CR>
 inoremap <F7> <ESC>:CtrlP<CR>
@@ -304,7 +304,7 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'mileszs/ack.vim'
 Plugin 'easymotion/vim-easymotion'
 Plugin 'ctrlpvim/ctrlp.vim'
-"Plugin 'tacahiroy/ctrlp-funky'
+Plugin 'tacahiroy/ctrlp-funky'
 Plugin 'drmingdrmer/xptemplate'
 Plugin 'ap/vim-buftabline'
 call vundle#end()            " required
